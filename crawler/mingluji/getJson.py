@@ -65,31 +65,42 @@ def getCompanyInfo(companyUrl,out,industry):
     soup = BeautifulSoup(browser.page_source, 'lxml')
 
     try:
-        company=soup.find("span",{"itemprop":"name"}).text
-        country=soup.find("span",{"itemprop":"location"}).text.split('(')[0].strip()
-        products=soup.find('b', string='Category').find_parent().find_parent().find_next_sibling().findAll("a",{"class":"extiw"})
-        product=''
+        companyTag = soup.find("span", {"itemprop": "name"})
+        company = companyTag.text if companyTag != None else ''
+
+        countryTag = soup.find("span", {"itemprop": "location"})
+        country = countryTag.text.split('(')[0].strip() if countryTag != None else ''
+
+        addressTag = soup.find("span", {"itemprop": "address"})
+        address = addressTag.text if addressTag != None else ''
+
+        telephoneTag = soup.find("span", {"itemprop": "telephone"})
+        telephone = telephoneTag.text if telephoneTag != None else ''
+
+        faxNumberTag = soup.find("span", {"itemprop": "faxNumber"})
+        faxNumber = faxNumberTag.text if faxNumberTag != None else ''
+
+        emailTag = soup.find("span", {"itemprop": "email"})
+        email = emailTag.text if emailTag != None else ''
+
+        website = soup.find('b', string='Website').find_parent().find_parent().find_next_sibling().text
+        contact = soup.find('b', string='Contact').find_parent().find_parent().find_next_sibling().text
+        products = soup.find('b', string='Category').find_parent().find_parent().find_next_sibling().findAll("a", {
+            "class": "extiw"})
+        product = ''
         for p in products:
-            product +=p.text+'|'
-
-        address=soup.find("span",{"itemprop":"address"}).text
-        contact=soup.find('b', string='Contact').find_parent().find_parent().find_next_sibling().text
-
-        telephone=soup.find("span",{"itemprop":"telephone"}).text
-        faxNumber=soup.find("span",{"itemprop":"faxNumber"}).text
-        email=soup.find("span",{"itemprop":"email"}).text
-        website=soup.find('b', string='Website').find_parent().find_parent().find_next_sibling().text
+            product += p.text + '|'
 
         dataDict = {'company': company, 'country': country, 'product': product, 'tel': str(telephone).replace('.0', ''),
                     'contact': contact,
                     'fax': str(faxNumber).replace('.0', ''), 'address': address, 'email': email, 'website': website,
-                    'requirement_remark': 'CF', 'industry': industry}
-
+                    'requirement_remark': 'MLJ', 'industry': industry}
 
         json_str = json.dumps(dataDict, ensure_ascii=False, indent=2)
 
         out.write(json_str+',')
     except Exception as e:
+        print(e,file=sys.stderr)
         print(companyUrl,'exportError',file=sys.stderr)
 
 

@@ -52,9 +52,13 @@ def getCompanyInfo(companyUrl,out,industry):
     # 打开页面
     # https: // purchaser.mingluji.com / Hardware
     r = s.get(url+companyUrl.replace('\n',''))
+    #r = s.get('https://purchaser.mingluji.com/WESTERN_POLYMERS_DE_MEXICO_SA_DE_CV')
     if r.status_code != 200:
         print(companyUrl,'code error',file=sys.stderr)
         sleep(5)
+        s.get('https://purchaser.mingluji.com/Main_Page')
+        sleep(30)
+        getCompanyInfo(companyUrl, out, industry)
         return
     html = r.text
     #sleep(1)
@@ -62,31 +66,44 @@ def getCompanyInfo(companyUrl,out,industry):
     soup = BeautifulSoup(html, 'lxml')
 
     try:
-        company=soup.find("span",{"itemprop":"name"}).text
-        country=soup.find("span",{"itemprop":"location"}).text.split('(')[0].strip()
-        products=soup.find('b', string='Category').find_parent().find_parent().find_next_sibling().findAll("a",{"class":"extiw"})
-        product=''
-        for p in products:
-            product +=p.text+'|'
+        companyTag=soup.find("span",{"itemprop":"name"})
+        company=companyTag.text if companyTag!=None else ''
 
-        address=soup.find("span",{"itemprop":"address"}).text
-        contact=soup.find('b', string='Contact').find_parent().find_parent().find_next_sibling().text
+        countryTag=soup.find("span",{"itemprop":"location"})
+        country=countryTag.text.split('(')[0].strip() if countryTag!=None else ''
 
-        telephone=soup.find("span",{"itemprop":"telephone"}).text
-        faxNumber=soup.find("span",{"itemprop":"faxNumber"}).text
-        email=soup.find("span",{"itemprop":"email"}).text
+        addressTag=soup.find("span",{"itemprop":"address"})
+        address=addressTag.text if addressTag!=None else ''
+
+        telephoneTag=soup.find("span",{"itemprop":"telephone"})
+        telephone=telephoneTag.text if telephoneTag!=None else ''
+
+        faxNumberTag=soup.find("span",{"itemprop":"faxNumber"})
+        faxNumber=faxNumberTag.text if faxNumberTag!=None else ''
+
+
+        emailTag=soup.find("span",{"itemprop":"email"})
+        email=emailTag.text if emailTag!=None else ''
+
         website=soup.find('b', string='Website').find_parent().find_parent().find_next_sibling().text
+        contact=soup.find('b', string='Contact').find_parent().find_parent().find_next_sibling().text
+        products=soup.find('b', string='Category').find_parent().find_parent().find_next_sibling().findAll("a",{"class":"extiw"})
+        product = ''
+        for p in products:
+            product += p.text + '|'
+
 
         dataDict = {'company': company, 'country': country, 'product': product, 'tel': str(telephone).replace('.0', ''),
                     'contact': contact,
                     'fax': str(faxNumber).replace('.0', ''), 'address': address, 'email': email, 'website': website,
-                    'requirement_remark': 'CF', 'industry': industry}
+                    'requirement_remark': 'MLJ', 'industry': industry}
 
 
         json_str = json.dumps(dataDict, ensure_ascii=False, indent=2)
 
         out.write(json_str+',')
     except Exception as e:
+        print(e,file=sys.stderr)
         print(companyUrl,'exportError',file=sys.stderr)
 
 
