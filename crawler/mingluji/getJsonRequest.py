@@ -55,6 +55,7 @@ def getCompanyInfo(companyUrl,out,industry):
         # 打开页面
         r = s.get(url+companyUrl.replace('\n',''))
         if r.status_code != 200:
+            #重试次数+1
             count+=1
             print(companyUrl,'code error',file=sys.stderr)
             sleep(5)
@@ -63,7 +64,8 @@ def getCompanyInfo(companyUrl,out,industry):
                     print('continue')
                     break
                 sleep(5)
-            if(count<4):
+            #最多重试3次
+            if(count<3):
                 getCompanyInfo(companyUrl, out, industry)
             return
         #重置重试次数
