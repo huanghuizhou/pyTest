@@ -45,23 +45,29 @@ def doGetJson():
 
 
 
-
+ #重试次数
+count=0
 # 公司列表页
 def getCompanyInfo(companyUrl,out,industry):
+    #重试次数
     global count
-    count=0
     try:
         # 打开页面
         r = s.get(url+companyUrl.replace('\n',''))
         if r.status_code != 200:
+            count+=1
             print(companyUrl,'code error',file=sys.stderr)
             sleep(5)
             while True:
                 if(s.get('https://purchaser.mingluji.com/Main_Page').status_code==200):
+                    print('continue')
                     break
                 sleep(5)
-            getCompanyInfo(companyUrl, out, industry)
+            if(count<4):
+                getCompanyInfo(companyUrl, out, industry)
             return
+        #重置重试次数
+        count=0
         html = r.text
         #sleep(1)
         # 将网页源码转化为能被解析的lxml格式
