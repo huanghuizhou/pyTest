@@ -20,7 +20,7 @@ def doGetJson():
     url = 'https://purchaser.mingluji.com'
     # 实例化一个chrome浏览器
     chrome_options = Options()
-    # chrome_options.add_argument('--headless')
+    #chrome_options.add_argument('--headless')
     chrome_options.add_argument('--disable-gpu')
     chrome_options.add_argument('--no-sandbox')
     browser = webdriver.Chrome(chrome_options=chrome_options)
@@ -67,10 +67,10 @@ def getCompanyInfo(companyUrl,out,industry):
     try:
         company=soup.find("span",{"itemprop":"name"}).text
         country=soup.find("span",{"itemprop":"location"}).text.split('(')[0].strip()
-        products=soup.findAll("a",{"class":"extiw"})
+        products=soup.find('b', string='Category').find_parent().find_parent().find_next_sibling().findAll("a",{"class":"extiw"})
         product=''
         for p in products:
-            product +=p.text
+            product +=p.text+'|'
 
         address=soup.find("span",{"itemprop":"address"}).text
         contact=soup.find('b', string='Contact').find_parent().find_parent().find_next_sibling().text
