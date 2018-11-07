@@ -43,10 +43,7 @@ def getCompanyList(industry):
     # https: // purchaser.mingluji.com / Hardware
     browser.get(url+industry)
     sleep(1)
-    # 将网页源码转化为能被解析的lxml格式
-    soup = BeautifulSoup(browser.page_source, 'lxml')
     # 查找页数
-    soup.find("//*[contains(text(), 'Index Page No')]")
     page=browser.find_element_by_xpath("//*[contains(text(), 'Index Page No')]")
     pageNum=page.text.split(',')[-1].replace('.','')
 
