@@ -20,8 +20,9 @@ logger = get_logger(__file__)
 
 
 
-out = open('./allJson4.json', 'w')
-listAll=[]
+out = open('./allJson.json', 'w')
+
+
 numAll=0
 
 def doMerge(jsonPath):
@@ -29,13 +30,17 @@ def doMerge(jsonPath):
     dataList = json.loads(dataOpen.read())
 
     for dictDate in dataList:
+        if(len(dictDate)==0):
+            continue
 
         dictDate['company']=str(dictDate['company']).replace('\"','').replace('\'','')
+
+        if "industry" in dictDate:
+            dictDate['industry']=int(dictDate['industry'])
+
         json_str = json.dumps(dict(dictDate), ensure_ascii=False, indent=2)
         out.write(json_str+',')
 
-    global listAll
-    listAll +=dataList
 
     global numAll
     numAll += len(dataList)
@@ -53,6 +58,8 @@ def main():
     for i in range(0, len(list)):
         path = os.path.join(fileinName, list[i])
         #xxx届广交会
+        if(path=='./json/.DS_Store'):
+            continue
         filelist = os.listdir(path)
         #11x届广交会
         for j in range(0, len(filelist)):
@@ -75,7 +82,6 @@ def main():
 
     out.flush()
     out.close()
-    print(len(listAll))
     print(numAll)
 
 if __name__ == '__main__':

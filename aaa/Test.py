@@ -1,5 +1,3 @@
-from aaa.A import hhz
-
-a=hhz("asd",12)
-
-print(a.name)
+website='N.A.'
+if (website == '----------------------------' or website == 'N.A.'):
+    print(111)

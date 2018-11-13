@@ -50,6 +50,7 @@ def exportJson(xlsFile,xlsPath):
 
     global industry
     industry=xlsPath.split('_')[1].replace('.xlsx','').replace('.xls','')
+    industry=int(industry)
     table = xlsFile.sheets()[0]
     type =table.row_values(5)[0]
     dataDict=None
@@ -58,7 +59,10 @@ def exportJson(xlsFile,xlsPath):
     elif(type=='来自国家'):
         getDict2(table,out)
     elif(type == '公司名'):
-        getDict3(table,out)
+        if table.row_values(5)[8].replace(' ','')=='网址':
+            getDict7(table,out)
+        else:
+            getDict3(table,out)
     elif (type == 'company'):
         getDict4(table,out)
     elif (type == 'company'):
@@ -88,8 +92,8 @@ def getDict1(table,out):
         if (len(dateList) > 10):
             website = dateList[10]
 
-        dataDict = {'company': company, 'country': country, 'product': product, 'tel': str(tel).replace('.0',''), 'contact': contact,
-                    'fax': str(fax).replace('.0',''), 'address': address, 'email': email, 'website': website,'requirement_remark':'CF','industry':industry}
+        dataDict = {'company': company, 'country': country, 'product': product, 'tel': str(tel).replace('.0',''), 'contact': str(contact),
+                    'fax': str(fax).replace('.0',''), 'address':  str(address), 'email': email, 'website': website,'requirement_remark':'CF','industry':industry}
 
         if (len(dateList) > 11):
             # msn = dateList[11]
@@ -250,6 +254,34 @@ def getDict6(table,out):
     out.flush()
     out.close()
 
+# 第七种excel
+def getDict7(table,out):
+    out.write('[')
+
+    for i in range(6, table.nrows):
+        dateList = table.row_values(i)
+        company = dateList[0]
+        country = dateList[6]
+        product = dateList[7]
+        tel = dateList[2]
+        contact = dateList[5]
+        fax = dateList[3]
+        address = dateList[4]
+        email = dateList[1]
+        website = dateList[8]
+
+        dataDict = {'company': company, 'country': country, 'product': product, 'tel': str(tel).replace('.0',''), 'contact': contact,
+                    'fax': str(fax).replace('.0',''), 'address': address, 'email': email, 'website': website,'requirement_remark':'CF','industry':industry}
+
+        json_str = json.dumps(dataDict, ensure_ascii=False, indent=2)
+        if(i==table.nrows-1):
+            out.write(json_str)
+            out.write(']')
+        else:
+            out.write(json_str + ',')
+
+    out.flush()
+    out.close()
 
 def main():
     getXlsFile()

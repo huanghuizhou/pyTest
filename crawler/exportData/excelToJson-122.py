@@ -48,6 +48,7 @@ def exportJson(xlsFile, xlsPath):
 
     global industry
     industry = xlsPath.split('_')[1].replace('.xlsx', '').replace('.xls', '')
+    industry = int(industry)
     table = xlsFile.sheets()[0]
     getDict(table, out)
 
