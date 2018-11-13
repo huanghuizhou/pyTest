@@ -10,3 +10,16 @@ out.write(json_str)
 out.flush()
 out.close()
 print(1)
+def aaa():
+    global aa
+    aa="asd"
+
+
+def bbb():
+    print(aa)
+
+
+
+aaa()
+bbb()
+print(aa)
