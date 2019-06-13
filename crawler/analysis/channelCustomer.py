@@ -28,7 +28,7 @@ channel_crm_db = pymysql.connect(host=DB_HOST,  # 192.168.100.254
                                  passwd=DB_PASSWD,
                                  db="channel_crm",
                                  port=DB_PORT,  # 3306
-                                 use_unicode=True,
+                                 uFse_unicode=True,
                                  charset="utf8")
 
 gttown_crm_db = pymysql.connect(host=DB_HOST,  # 192.168.100.254

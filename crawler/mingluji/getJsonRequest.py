@@ -6,9 +6,6 @@ from time import sleep
 import requests
 from bs4 import BeautifulSoup
 
-with open('industry.txt') as f:
-    industries = set((x.strip() for x in f.readlines()))
-
 
 # 初始化
 def doGetJson():

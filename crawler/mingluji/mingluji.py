@@ -6,7 +6,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.wait import WebDriverWait
 
-with open('industry.txt') as f:
+with open('industry_1.txt') as f:
     industries = set((x.strip() for x in f.readlines()))
 
 
@@ -26,7 +26,7 @@ def init():
     wait = WebDriverWait(browser, 20)
     global out
     for industry in industries:
-        out=open('./url/'+industry,'w')
+        out=open('./url/'+industry+'.txt','w')
         print(industry,'开始解析')
         getCompanyList(industry.split('-')[0])
         print(industry,'解析完毕')

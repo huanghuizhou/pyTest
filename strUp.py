@@ -1,4 +1,9 @@
-a='asdasd'
+
+
+a=None
+
+if (a!=None and a=="aaaa"):
+    print(1)
 a=str.upper(a)
 print(a)
 
